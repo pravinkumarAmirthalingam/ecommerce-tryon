@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ShirtRepository shirtRepository;
@@ -44,6 +44,20 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Failed to upload image: " + e.getMessage());
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Shirt> updateProduct(@PathVariable Long id, @RequestBody Shirt updatedShirt) {
+        return shirtRepository.findById(id).map(shirt -> {
+            shirt.setName(updatedShirt.getName());
+            shirt.setPrice(updatedShirt.getPrice());
+            shirt.setSize(updatedShirt.getSize());
+            shirt.setColor(updatedShirt.getColor());
+            if (updatedShirt.getImageUrl() != null) {
+                shirt.setImageUrl(updatedShirt.getImageUrl());
+            }
+            return ResponseEntity.ok(shirtRepository.save(shirt));
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping

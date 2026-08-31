@@ -4,6 +4,8 @@ import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.SetBucketPolicyArgs;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +28,8 @@ public class MinioService {
         this.minioClient = minioClient;
     }
 
-    public String uploadImage(MultipartFile file) {
+    @PostConstruct
+    public void initBucket() {
         try {
             // Check if bucket exists
             boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
@@ -34,6 +37,28 @@ public class MinioService {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
             }
 
+            // Explicitly set public read policy on the bucket so frontend can display images
+            String policy = "{\n" +
+                    "  \"Statement\": [\n" +
+                    "    {\n" +
+                    "      \"Action\": \"s3:GetObject\",\n" +
+                    "      \"Effect\": \"Allow\",\n" +
+                    "      \"Principal\": \"*\",\n" +
+                    "      \"Resource\": \"arn:aws:s3:::" + bucketName + "/*\"\n" +
+                    "    }\n" +
+                    "  ],\n" +
+                    "  \"Version\": \"2012-10-17\"\n" +
+                    "}";
+            minioClient.setBucketPolicy(
+                    SetBucketPolicyArgs.builder().bucket(bucketName).config(policy).build()
+            );
+        } catch (Exception e) {
+            System.err.println("Error initializing MinIO bucket policy: " + e.getMessage());
+        }
+    }
+
+    public String uploadImage(MultipartFile file) {
+        try {
             // Generate unique file name
             String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
 
