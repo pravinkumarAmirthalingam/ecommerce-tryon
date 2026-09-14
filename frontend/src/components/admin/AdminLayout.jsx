@@ -17,7 +17,7 @@ const AdminLayout = () => {
 
   const handleLogout = () => {
     authAPI.logout();
-    navigate('/login');
+    navigate('/auth/login');
   };
 
   const navItems = [
@@ -26,12 +26,12 @@ const AdminLayout = () => {
   ];
 
   const Sidebar = () => (
-    <div className="flex flex-col h-full bg-white border-r border-gray-200">
-      <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
+    <div className="flex flex-col h-full bg-[#111111] border-r border-[#333333]">
+      <div className="p-6 border-b border-[#333333] flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white tracking-wider uppercase">Admin Panel</h2>
         <button 
           onClick={() => setIsSidebarOpen(false)}
-          className="lg:hidden text-gray-500 hover:text-gray-800"
+          className="lg:hidden text-luxury-textSecondary hover:text-white"
         >
           <X className="w-6 h-6" />
         </button>
@@ -47,42 +47,42 @@ const AdminLayout = () => {
               to={item.path}
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive 
-                  ? 'bg-blue-50 text-blue-700' 
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-luxury-gold/10 text-luxury-gold' 
+                  : 'text-luxury-textSecondary hover:bg-white/5 hover:text-white'
               }`}
             >
               <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.name}</span>
+              <span className="font-medium tracking-wide uppercase text-sm">{item.name}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-200 space-y-2">
+      <div className="p-4 border-t border-[#333333] space-y-2">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+          className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-luxury-textSecondary hover:bg-white/5 hover:text-white transition-colors"
         >
           <Home className="w-5 h-5" />
-          <span className="font-medium">Go to Store</span>
+          <span className="font-medium tracking-wide uppercase text-sm">Go to Store</span>
         </button>
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+          className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-colors"
         >
           <LogOut className="w-5 h-5" />
-          <span className="font-medium">Logout</span>
+          <span className="font-medium tracking-wide uppercase text-sm">Logout</span>
         </button>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-luxury-bg flex">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-gray-900/50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black/80 z-20 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -99,11 +99,11 @@ const AdminLayout = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar for mobile */}
-        <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:hidden">
-          <h1 className="text-xl font-bold text-gray-800">Admin</h1>
+        <header className="bg-[#111111] border-b border-[#333333] h-16 flex items-center justify-between px-4 lg:hidden">
+          <h1 className="text-xl font-bold text-white tracking-wider uppercase">Admin</h1>
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="text-gray-600 hover:text-gray-900 p-2"
+            className="text-luxury-textSecondary hover:text-white p-2"
           >
             <Menu className="w-6 h-6" />
           </button>

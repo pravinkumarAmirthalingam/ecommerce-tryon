@@ -23,6 +23,21 @@ api.interceptors.request.use(
   }
 );
 
+// Response interceptor to handle token expiration or invalid tokens (e.g., after server restart)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      authAPI.logout();
+      // Only redirect if not already on login page
+      if (window.location.pathname !== '/auth/login' && window.location.pathname !== '/auth/register') {
+        window.location.href = '/auth/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Authentication service endpoints
 export const authAPI = {
   login: async (email, password) => {
@@ -79,7 +94,11 @@ export const productAPI = {
   uploadProductImage: async (id, file) => {
     const formData = new FormData();
     formData.append('file', file);
-    const response = await api.post(`/products/${id}/image`, formData);
+    const response = await api.post(`/products/${id}/image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response.data;
   }
 };
@@ -87,7 +106,27 @@ export const productAPI = {
 // Virtual Try-On service endpoints
 export const tryOnAPI = {
   processTryOn: async (formData) => {
-    const response = await api.post('/tryon', formData);
+    const response = await api.post('/tryon', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  }
+};
+
+// User service endpoints
+export const userAPI = {
+  getAllUsers: async () => {
+    const response = await api.get('/user/all');
+    return response.data;
+  }
+};
+
+// Order service endpoints
+export const orderAPI = {
+  getAllOrders: async () => {
+    const response = await api.get('/orders/all');
     return response.data;
   }
 };

@@ -69,22 +69,32 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
       onSuccess();
     } catch (err) {
       console.error('Failed to save product', err);
-      setError(err.response?.data?.message || 'Failed to save product');
+      let errorMessage = 'Failed to save product';
+      if (err.response?.data) {
+        if (typeof err.response.data === 'string') {
+          errorMessage = err.response.data;
+        } else if (err.response.data.message) {
+          errorMessage = err.response.data.message;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden my-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+      <div className="bg-[#111111] rounded-xl shadow-xl w-full max-w-2xl overflow-hidden my-auto border border-[#333333]">
+        <div className="flex items-center justify-between p-6 border-b border-[#333333]">
+          <h2 className="text-xl font-bold tracking-wider uppercase text-white">
             {isEditing ? 'Edit Product' : 'Add New Product'}
           </h2>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-luxury-textSecondary hover:text-white transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -100,18 +110,18 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Col: Image Upload */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Product Image</label>
+              <label className="block text-sm font-medium text-white mb-1 uppercase tracking-wide">Product Image</label>
               <div 
-                className="border-2 border-dashed border-gray-300 rounded-xl h-64 flex flex-col items-center justify-center relative overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+                className="border-2 border-dashed border-[#333333] rounded-xl h-64 flex flex-col items-center justify-center relative overflow-hidden bg-[#1A1A1A] hover:bg-white/5 transition-colors cursor-pointer"
                 onClick={() => document.getElementById('imageUpload').click()}
               >
                 {imagePreview ? (
                   <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                 ) : (
                   <div className="text-center p-4">
-                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500">Click to upload image</p>
-                    <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB</p>
+                    <Upload className="w-8 h-8 text-luxury-gold mx-auto mb-2" />
+                    <p className="text-sm text-luxury-textSecondary tracking-wide uppercase">Click to upload</p>
+                    <p className="text-xs text-[#A0A0A0] mt-1">PNG, JPG up to 5MB</p>
                   </div>
                 )}
                 <input 
@@ -127,20 +137,20 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
             {/* Right Col: Details */}
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                <label className="block text-sm font-medium text-white mb-1 uppercase tracking-wide">Product Name</label>
                 <input 
                   type="text" 
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-2 border border-[#333333] bg-[#1A1A1A] text-white rounded-lg focus:ring-2 focus:ring-luxury-gold/20 focus:border-luxury-gold outline-none transition-all placeholder-[#555555]"
                   placeholder="e.g. Black Slim Fit Shirt"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+                <label className="block text-sm font-medium text-white mb-1 uppercase tracking-wide">Price (₹)</label>
                 <input 
                   type="number" 
                   name="price"
@@ -148,19 +158,19 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                   value={formData.price}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-2 border border-[#333333] bg-[#1A1A1A] text-white rounded-lg focus:ring-2 focus:ring-luxury-gold/20 focus:border-luxury-gold outline-none transition-all placeholder-[#555555]"
                   placeholder="29.99"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Size</label>
+                  <label className="block text-sm font-medium text-white mb-1 uppercase tracking-wide">Size</label>
                   <select 
                     name="size"
                     value={formData.size}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+                    className="w-full px-4 py-2 border border-[#333333] bg-[#1A1A1A] text-white rounded-lg focus:ring-2 focus:ring-luxury-gold/20 focus:border-luxury-gold outline-none transition-all appearance-none"
                   >
                     <option value="S">S</option>
                     <option value="M">M</option>
@@ -170,13 +180,13 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                  <label className="block text-sm font-medium text-white mb-1 uppercase tracking-wide">Color</label>
                   <input 
                     type="text" 
                     name="color"
                     value={formData.color}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    className="w-full px-4 py-2 border border-[#333333] bg-[#1A1A1A] text-white rounded-lg focus:ring-2 focus:ring-luxury-gold/20 focus:border-luxury-gold outline-none transition-all placeholder-[#555555]"
                     placeholder="e.g. Black"
                   />
                 </div>
@@ -184,18 +194,18 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-6">
+          <div className="mt-8 flex justify-end gap-3 border-t border-[#333333] pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-6 py-2 border border-[#333333] text-luxury-textSecondary rounded-lg hover:bg-white/5 transition-colors font-medium tracking-wide uppercase text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center shadow-sm disabled:opacity-70"
+              className="px-6 py-2 bg-luxury-gold text-black rounded-lg hover:bg-[#A68A56] transition-colors flex items-center shadow-sm disabled:opacity-70 font-medium tracking-wide uppercase text-sm"
             >
               {loading ? (
                 <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>

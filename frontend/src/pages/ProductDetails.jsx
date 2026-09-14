@@ -160,10 +160,10 @@ const ProductDetails = () => {
               </h1>
               <div className="flex items-center gap-4 mb-4">
                 <span className="text-xl lg:text-2xl text-luxury-gold tracking-widest font-semibold">
-                  ${Number(product.price).toFixed(2)}
+                  ₹{Number(product.price).toFixed(2)}
                 </span>
                 <span className="text-gray-500 line-through text-sm">
-                  ${(Number(product.price) * 1.37).toFixed(2)}
+                  ₹{(Number(product.price) * 1.37).toFixed(2)}
                 </span>
                 <span className="text-green-500 text-xs font-medium tracking-wide">
                   (37% OFF)

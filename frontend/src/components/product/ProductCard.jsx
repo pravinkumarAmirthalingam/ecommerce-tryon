@@ -33,9 +33,9 @@ const ProductCard = ({ product }) => {
           </div>
           
           <div className="flex items-end justify-between mt-4 pt-4 border-t border-gray-800/50">
-            <p className="text-xl tracking-wider font-semibold text-white">
-              ${Number(product.price).toFixed(2)}
-            </p>
+            <span className="text-lg font-medium text-white tracking-wider">
+              ₹{Number(product.price).toFixed(2)}
+            </span>
             {product.size && (
               <span className="text-xs tracking-widest font-mono uppercase bg-gray-900 border border-gray-700 rounded px-2 py-1 text-gray-300">
                 {product.size}

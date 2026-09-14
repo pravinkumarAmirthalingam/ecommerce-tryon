@@ -16,16 +16,29 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await authAPI.login(email, password);
-      // On success, redirect to dashboard or home
-      navigate('/'); 
-    } catch (err) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message);
-      } else if (err.response && err.response.status === 403) {
-        setError("Invalid email or password.");
+      const data = await authAPI.login(email, password);
+      // Redirect based on role
+      if (data.role === 'ROLE_ADMIN') {
+        navigate('/admin');
       } else {
-        setError("An error occurred during login. Please try again.");
+        navigate('/');
+      }
+    } catch (err) {
+      console.error("Login Error:", err);
+      if (err.response) {
+        if (typeof err.response.data === 'string' && err.response.data.length < 100) {
+          setError(err.response.data);
+        } else if (err.response.data && err.response.data.message) {
+          setError(err.response.data.message);
+        } else if (err.response.status === 403 || err.response.status === 401) {
+          setError("Invalid email or password.");
+        } else {
+          setError(`Server error: ${err.response.status}`);
+        }
+      } else if (err.request) {
+        setError("Network Error: Could not reach the server. Please ensure the backend is running.");
+      } else {
+        setError("An unexpected error occurred during login.");
       }
     } finally {
       setIsLoading(false);
